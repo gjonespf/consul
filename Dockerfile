@@ -3,6 +3,7 @@ FROM consul
 # Add Containerpilot and set its configuration
 ENV CONTAINERPILOT_VERSION 2.7.3
 ENV CONTAINERPILOT file:///etc/containerpilot.json
+ENV HEALTH_URL http://localhost:8500/ui/
 
 RUN export CONTAINERPILOT_CHECKSUM=2511fdfed9c6826481a9048e8d34158e1d7728bf \
     && export archive=containerpilot-${CONTAINERPILOT_VERSION}.tar.gz \
@@ -18,7 +19,7 @@ RUN export CONTAINERPILOT_CHECKSUM=2511fdfed9c6826481a9048e8d34158e1d7728bf \
 COPY etc/containerpilot.json etc/
 COPY bin/* /usr/local/bin/
 
-HEALTHCHECK --interval=30s --timeout=20s --retries=10 CMD curl --fail -s http://localhost:8500/ui/ || exit 1
+HEALTHCHECK --interval=30s --timeout=20s --retries=10 CMD curl --fail -s $HEALTH_URL || exit 1
 
 EXPOSE 8500 8301
 
